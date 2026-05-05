@@ -1,12 +1,12 @@
-# 🔥 pfSense Installation on Proxmox
+# pfSense Installation on Proxmox
 
-## 🎯 Objective
+## Objective
 
 Deploy pfSense as a virtual firewall/router in Proxmox to simulate a real enterprise network with WAN and LAN segmentation.
 
 ---
 
-## 🖥️ Environment
+## Environment
 
 | Component | Details |
 |----------|--------|
@@ -27,7 +27,7 @@ https://www.pfsense.org/download/
 
 ---
 
-## ⚙️ Proxmox Setup (High-Level)
+## Proxmox Setup (High-Level)
 
 1. Installed Proxmox VE on host machine
 2. Accessed web UI: https://<host-ip>:8006
@@ -41,7 +41,7 @@ https://www.pfsense.org/download/
 
 ---
 
-## 🧱 pfSense VM Creation
+## pfSense VM Creation
 
 ### Key Configuration:
 
@@ -57,7 +57,7 @@ https://www.pfsense.org/download/
 
 ---
 
-## 💿 Installation Process
+## Installation Process
 
 1. Attached pfSense ISO to VM
 2. Started VM → launched installer
@@ -69,7 +69,7 @@ https://www.pfsense.org/download/
 
 ---
 
-## 🔌 Interface Assignment
+## Interface Assignment
 
 During pfSense setup:
 
@@ -90,7 +90,7 @@ Configured manually: IP Address: 10.0.0.1
 
 ---
 
-## 🌐 LAN Configuration
+## LAN Configuration
 
 - Enabled DHCP Server
 
@@ -99,7 +99,7 @@ Range: 10.0.0.100 - 10.0.0.199
 
 ---
 
-## 🌍 Accessing pfSense GUI
+## Accessing pfSense GUI
 
 From internal network: 10.0.0.1
 
@@ -109,7 +109,7 @@ Default login: Username: admin
 
 ---
 
-## ⚠️ Notes / Decisions
+## Notes / Decisions
 
 - Used `10.0.0.0/24` as internal network (common enterprise practice)
 - WAN uses DHCP to integrate with home network
@@ -117,7 +117,7 @@ Default login: Username: admin
 
 ---
 
-## 🧪 Verification
+## Verification
 
 Tested: ping 10.0.0.1
         ping 8.8.8.8
@@ -128,7 +128,7 @@ Confirmed:
 
 ---
 
-## 🧠 Key Learnings
+## Key Learnings
 
 - pfSense acts as a Layer 3 router between networks
 - Network segmentation improves security
@@ -137,7 +137,7 @@ Confirmed:
 
 ---
 
-## 🚀 Next Steps
+## Next Steps
 
 - Configure Windows Server inside LAN
 - Set up Active Directory
