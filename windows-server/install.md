@@ -39,153 +39,132 @@ https://www.microsoft.com/en-us/evalcenter/
 
 ---
 
-## ⚠️ Issue Encountered
+# 🏢 Active Directory Domain Controller Setup
 
-### ❌ Problem:
-No disk detected during installation
+## 🎯 Objective
 
----
-
-## 🧠 Root Cause
-
-Windows installer does not include **VirtIO drivers**, which are required for Proxmox virtual disks.
+Configure Windows Server 2022 as a Domain Controller with Active Directory Domain Services (AD DS) and DNS in a virtual enterprise lab environment.
 
 ---
 
-## 🛠️ Solution (VirtIO Driver Injection)
+## 🧱 Prerequisites
 
-### Step 1 – Download VirtIO Drivers
+Before installing AD DS, the following steps were completed:
 
-Downloaded from:
+### 1. Rename Server
 
-https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/latest-virtio/
+Renamed system to:
 
----
+DC-TMA
 
-### Step 2 – Attach ISO to VM
-
-Proxmox:
-- Hardware → Add → CD/DVD Drive
-- Selected: `virtio-win.iso`
+Reason:
+Renaming before domain promotion avoids complexity and prevents issues after the server becomes a Domain Controller.
 
 ---
 
-### Step 3 – Load Driver in Installer
+### 2. Configure Static IP Address
 
-Inside Windows setup:
+Changed network configuration from DHCP to static:
 
-1. Click: Load Driver
-2. Browse to: CD Drive (virtio)
-              → vioscsi
-              → 2k22
-              → amd64
-3. Install driver
+IP Address: 10.0.0.101  
+Subnet Mask: 255.255.255.0  
+Default Gateway: 10.0.0.1  
+DNS: 10.0.0.1 (pfSense)
 
----
-
-## ✅ Result
-
-- Disk appeared immediately
-- Windows installation proceeded successfully
+Reason:
+Domain Controllers require a static IP to maintain consistent network identity and reliable DNS resolution.
 
 ---
 
-## 🔌 Network Configuration & Troubleshooting
+## Installing Active Directory Domain Services
 
-### Initial State
+Steps:
 
-After installation, the VM received an IP from the home network:
-192.168.1.x
-
-This indicated the VM was connected to the **wrong network bridge (vmbr0)** instead of the internal LAN.
-
----
-
-## ⚠️ Issue 1 – Incorrect Network (Wrong Subnet)
-
-### Problem
-
-VM was getting IP: 192.168.1.x  Instead of: 10.0.0.x
+1. Open Server Manager
+2. Navigate to:
+   Manage → Add Roles and Features
+3. Select:
+   Role-based or feature-based installation
+4. Choose the local server
+5. Enable:
+   - Active Directory Domain Services
+   - DNS Server
+6. Proceed with installation
 
 ---
 
-### Root Cause
+## Promoting to Domain Controller
 
-VM network adapter was connected to: vmbr0 (WAN) Instead of: vmbr1 (LAN behind pfSense)
+After installation:
 
----
+1. Click:
+   Promote this server to a domain controller
+2. Select:
+   Add a new forest
+3. Enter domain name:
 
-### Solution
+TMA.local
 
-In Proxmox:
-
-1. Navigate to: VM → Hardware → Network Device
-2. Edit network interface: Bridge: vmbr0 → vmbr1
-3. Restart VM
-
----
-
-### Result
-
-VM received correct IP: 10.0.0.101
-
+4. Set Directory Services Restore Mode (DSRM) password
+5. Ignore DNS delegation warning (expected in new forest)
+6. Proceed with installation
+7. Server reboots automatically
 
 ---
 
-## ⚠️ Issue 2 – DNS Not Working
+## Post-Installation Configuration
 
-### Problem
+### 1. Verify Domain
 
-Internet was partially working:
-ping 8.8.8.8 → success
-ping google.com → failed
+Open Command Prompt:
 
----
+echo %USERDOMAIN%
 
-### Root Cause
-
-pfSense firewall was not properly configured with upstream DNS servers.
+Expected result:
+TMA
 
 ---
 
-### Solution
+### 2. Update DNS Settings
 
-Logged into pfSense web interface: https://10.0.0.1
+After promotion, change DNS from pfSense to local server:
 
-Then:
+Preferred DNS: 127.0.0.1  
+(or 10.0.0.101)
 
-1. Navigate to: System → General Setup
-2. Set DNS servers: 8.8.8.8
-                    1.1.1.1
-3. Disable DNS override
-4. Save configuration
+Reason:
+Domain Controllers must use themselves as DNS servers for proper Active Directory functionality.
 
 ---
 
-### Client Refresh
+### 3. Test Name Resolution
 
-On Windows Server:
+Run:
 
-```cmd
-ipconfig /flushdns
-ipconfig /renew
-```
-Result:
-ping google.com → success
+nslookup google.com
 
-🧪 Final Verification
-ping 10.0.0.1
-ping 8.8.8.8
-ping google.com
+---
 
-Results:
+## 🧪 Validation
 
-pfSense reachable ✅
-Internet reachable ✅
-DNS resolution working ✅
+- Domain successfully created (TMA.local)
+- DNS functioning correctly
+- Server operating as Domain Controller (DC-TMA)
 
-🧠 Key Learning
-Network bridge selection determines subnet assignment
-pfSense acts as both gateway and DNS resolver
-DNS issues can exist even when internet connectivity is functional
+---
 
+## Key Learnings
+
+- Domain Controllers must have a static IP
+- AD DS relies heavily on DNS
+- Correct configuration sequence prevents deployment issues
+- External DNS should not be used after domain promotion
+
+---
+
+## Next Steps
+
+- Create Organizational Units (OU)
+- Add users and groups
+- Configure Group Policy (GPO)
+- Join client VM to domain
