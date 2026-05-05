@@ -1,7 +1,8 @@
 # 🧾 Enterprise Homelab – Proxmox + pfSense + Windows Server
 
 ## 🎯 Objective
-Build a virtual enterprise network using Proxmox, pfSense, and Windows Server to simulate real-world infrastructure.
+Build a virtual enterprise network using Proxmox, pfSense, and Windows Server to simulate real-world infrastructure. 
+We documented the full network topology including WAN/LAN segmentation and traffic flow through pfSense.
 
 ---
 
@@ -62,6 +63,12 @@ Internet (192.168.1.x)
 - Group Policy (GPO)
 - VPN setup (pfSense)
 - Azure hybrid lab
+
+---
+## 🌐 Network Diagram
+
+See full diagram:
+[View Network Architecture](diagrams/network.md)
 
 ---
 
