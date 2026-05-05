@@ -1,0 +1,270 @@
+# 🧪 Enterprise Home Lab: Proxmox + pfSense + Active Directory
+
+## Objective
+
+Build a multi-network lab simulating a real enterprise environment with:
+
+* Firewall (pfSense)
+* Domain Controller (Windows Server)
+* Client machine (Windows 10)
+* Cross-network communication and domain join
+
+---
+
+## Lab Architecture
+
+```
+[ Home Network ]
+192.168.1.0/24
+        │
+        │ (Bridged - VMware Client)
+        ▼
+   pfSense (OPT1: 192.168.1.60)
+        │
+        │ (Routing / Firewall)
+        ▼
+   pfSense (LAN: 10.0.0.1)
+        │
+        ▼
+   Domain Controller (10.0.0.101)
+```
+
+---
+
+## Environment Setup
+
+### 🔹 Proxmox VE
+
+* Installed via ISO (Rufus)
+* Hosted on old laptop
+* Used to run:
+
+  * pfSense VM
+  * Windows Server VM
+
+Download: https://www.proxmox.com/en/downloads
+
+---
+
+### 🔹 pfSense
+
+* Installed as VM in Proxmox
+* Acts as:
+
+  * Router
+  * Firewall
+  * Network bridge between subnets
+
+Interfaces:
+
+```
+WAN  → vmbr0 → 192.168.1.x (home network)
+LAN  → vmbr1 → 10.0.0.1 (internal lab)
+OPT1 → vmbr0 → 192.168.1.60 (client access)
+```
+
+---
+
+### 🔹 Windows Server 2022 (DC-TMA)
+
+* Installed with VirtIO drivers
+* Static IP configured:
+
+```
+IP: 10.0.0.101
+Gateway: 10.0.0.1
+DNS: 10.0.0.101
+```
+
+* Roles installed:
+
+  * Active Directory Domain Services
+  * DNS
+
+* Promoted to Domain Controller:
+
+```
+Domain: TMA.local
+Hostname: DC-TMA
+```
+
+---
+
+### 🔹 VMware Client (Windows 10)
+
+* Installed on separate laptop
+* Network: Bridged (192.168.1.x)
+
+Manual config:
+
+```
+IP:        192.168.1.x
+Gateway:   192.168.1.60 (pfSense)
+DNS:       10.0.0.101   (DC)
+```
+
+---
+
+## Networking Challenges & Fixes
+
+### Issue 1: Client couldn’t reach server
+
+**Cause:**
+
+* Client using home router as gateway (192.168.1.254)
+
+**Fix:**
+
+```
+Set gateway → 192.168.1.60 (pfSense)
+```
+
+---
+
+### Issue 2: Firewall blocking traffic
+
+**Cause:**
+
+* pfSense blocks traffic by default on new interfaces
+
+**Fix:**
+
+Firewall → Rules → OPT1:
+
+```
+Pass | IPv4 | ANY | any → any
+```
+
+Firewall → Rules → LAN:
+
+```
+Default allow rule (already exists)
+```
+
+---
+
+### Issue 3: “Couldn’t contact domain”
+
+**Cause:**
+
+* Client using ISP DNS (IPv6 Telus)
+
+**Fix:**
+
+```
+Set DNS → 10.0.0.101
+Disable IPv6 (lab workaround)
+```
+
+---
+
+### Issue 4: No disk during Windows install
+
+**Cause:**
+
+* VirtIO driver missing
+
+**Fix:**
+
+* Mounted `virtio-win.iso`
+* Loaded SCSI driver during install
+
+---
+
+### Issue 5: Copy/paste not working
+
+**Cause:**
+
+* noVNC limitations
+
+**Fix:**
+
+* Switched to SPICE
+* Installed:
+
+```
+virtio-win-guest-tools.exe
+```
+
+---
+
+## 🧪 Validation
+
+### From Client:
+
+```
+ping 192.168.1.60   ✔ pfSense
+ping 10.0.0.1       ✔ LAN interface
+ping 10.0.0.101     ✔ Domain Controller
+```
+
+---
+
+### DNS Test:
+
+```
+nslookup tma.local
+→ 10.0.0.101 ✔
+```
+
+---
+
+### Domain Join:
+
+```
+TMA.local ✔
+```
+
+---
+
+### Authentication Test:
+
+```
+whoami
+→ tma\username ✔
+```
+
+---
+
+## Key Learnings
+
+* Routing requires correct **default gateway**
+* AD depends heavily on **DNS (not just connectivity)**
+* pfSense firewall rules apply on **incoming interface**
+* IPv6 DNS can override IPv4 settings
+* Each interface must be on a **different subnet**
+* Virtual networking across hosts requires careful design
+
+---
+
+## Next Steps
+
+* Group Policy (GPO)
+* File Server + Permissions
+* Organizational Units (OU)
+* VPN (pfSense)
+* AD Certificate Services (AD CS)
+
+---
+
+## Summary
+
+This lab demonstrates:
+
+✔ Multi-network routing using pfSense
+✔ Active Directory deployment with DNS
+✔ Cross-subnet domain join
+✔ Troubleshooting real-world networking issues
+
+---
+
+## 💼 Use Case
+
+This project simulates a **real enterprise environment** and demonstrates:
+
+* System Administration
+* Network Troubleshooting
+* Identity Management (AD)
+* Virtualization (Proxmox + VMware)
+
+---
