@@ -17,14 +17,6 @@ Deploy pfSense as a virtual firewall/router in Proxmox to simulate a real enterp
 
 ---
 
-## 📥 Downloads
-
-### Proxmox VE ISO
-Downloaded from:
-https://www.proxmox.com/en/downloads
-
----
-
 ### pfSense ISO (Netgate Installer)
 Downloaded from:
 https://www.pfsense.org/download/
