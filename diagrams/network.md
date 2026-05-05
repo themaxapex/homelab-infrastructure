@@ -1,4 +1,4 @@
-# 🌐 Network Architecture Diagram
+# Network Architecture Diagram
 
 ## Topology
     Internet (192.168.1.0/24)
@@ -30,7 +30,7 @@
 
 ---
 
-## 🧠 Description
+## Description
 
 - **vmbr0 (WAN)** connects pfSense to the physical network (home router)
 - **vmbr1 (LAN)** isolates internal lab network
@@ -39,7 +39,7 @@
 
 ---
 
-## 🔄 Traffic Flow
+## Traffic Flow
 Windows Server
 ↓
 pfSense (LAN → WAN)
@@ -50,7 +50,7 @@ Internet
 
 ---
 
-## 🔐 Security Model
+## Security Model
 
 - LAN (10.0.0.0/24) is isolated from home network
 - All traffic must pass through pfSense firewall
@@ -58,7 +58,7 @@ Internet
 
 ---
 
-## 🧠 Key Learning
+## Key Learning
 
 - Separation of WAN and LAN is fundamental in enterprise networks
 - Virtual bridges simulate physical switches
