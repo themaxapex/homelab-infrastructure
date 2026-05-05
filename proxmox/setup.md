@@ -1,12 +1,12 @@
-# 🖥️ Proxmox VE Installation & Lab Setup
+# Proxmox VE Installation & Lab Setup
 
-## 🎯 Objective
+## Objective
 
 Prepare the hypervisor environment and deploy virtual machines to simulate an enterprise network.
 
 ---
 
-## 📥 Downloads
+## Downloads
 
 ### Proxmox VE ISO
 Downloaded from:
@@ -26,7 +26,7 @@ https://www.pfsense.org/download/
 
 ---
 
-## 💿 Creating Bootable USB
+## Creating Bootable USB
 
 Used **Rufus** to create bootable Proxmox installer:
 
@@ -40,7 +40,7 @@ Steps:
 
 ---
 
-## ⚙️ Installing Proxmox
+## Installing Proxmox
 
 1. Booted from USB
 2. Selected "Install Proxmox VE"
@@ -52,7 +52,7 @@ Steps:
 
 ---
 
-## 🌐 Accessing Proxmox
+## Accessing Proxmox
 
 After installation: https://<proxmox-ip>:8006
 
@@ -62,7 +62,7 @@ Logged in with:
 
 ---
 
-## 📤 Uploading ISOs
+## Uploading ISOs
 
 From Proxmox GUI:
 
@@ -74,7 +74,7 @@ From Proxmox GUI:
 
 ---
 
-## 🔌 Network Setup
+## Network Setup
 
 Configured:
 
@@ -83,14 +83,14 @@ Configured:
 
 ---
 
-## 🧱 Virtual Machines Created
+## Virtual Machines Created
 
 - pfSense VM (Firewall)
 - Windows Server 2022 VM
 
 ---
 
-## 🧠 Key Learnings
+## Key Learnings
 
 - Hypervisors manage virtual infrastructure
 - Proxmox bridges simulate real network switches
