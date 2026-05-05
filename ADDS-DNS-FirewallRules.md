@@ -1,5 +1,3 @@
-# 🧪 Enterprise Home Lab: Proxmox + pfSense + Active Directory
-
 ## Objective
 
 Build a multi-network lab simulating a real enterprise environment with:
@@ -33,20 +31,16 @@ Build a multi-network lab simulating a real enterprise environment with:
 
 ## Environment Setup
 
-### 🔹 Proxmox VE
+###  Proxmox VE 
 
-* Installed via ISO (Rufus)
-* Hosted on old laptop
+* Hypervisor 1 bare metal installation
 * Used to run:
-
   * pfSense VM
   * Windows Server VM
 
-Download: https://www.proxmox.com/en/downloads
-
 ---
 
-### 🔹 pfSense
+###  pfSense
 
 * Installed as VM in Proxmox
 * Acts as:
@@ -65,7 +59,7 @@ OPT1 → vmbr0 → 192.168.1.60 (client access)
 
 ---
 
-### 🔹 Windows Server 2022 (DC-TMA)
+### Windows Server 2022 (DC-TMA)
 
 * Installed with VirtIO drivers
 * Static IP configured:
@@ -90,7 +84,7 @@ Hostname: DC-TMA
 
 ---
 
-### 🔹 VMware Client (Windows 10)
+###  VMware Client (Windows 10)
 
 * Installed on separate laptop
 * Network: Bridged (192.168.1.x)
@@ -188,7 +182,7 @@ virtio-win-guest-tools.exe
 
 ---
 
-## 🧪 Validation
+## Validation
 
 ### From Client:
 
@@ -258,7 +252,7 @@ This lab demonstrates:
 
 ---
 
-## 💼 Use Case
+## Use Case
 
 This project simulates a **real enterprise environment** and demonstrates:
 
